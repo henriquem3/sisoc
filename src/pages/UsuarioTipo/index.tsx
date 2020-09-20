@@ -1,9 +1,12 @@
 import React from 'react';
 
+import Header from '../../components/Header';
+
 const UsuarioTipo: React.FC = () => {
   return (
     <div>
-      <h1>Usuario Tipo</h1>
+      <Header/>
+      <h1>Tipos de Usuário</h1>
     </div>
   );
 };

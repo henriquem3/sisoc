@@ -1,9 +1,12 @@
 import React from 'react';
 
+import Header from '../../components/Header';
+
 const Setor: React.FC = () => {
   return (
     <div>
-      <h1>Setor</h1>
+      <Header/>
+      <h1>Setores</h1>
     </div>
   );
 };

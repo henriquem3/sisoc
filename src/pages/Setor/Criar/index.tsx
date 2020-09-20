@@ -6,7 +6,7 @@ const Criar: React.FC = () => {
   return (
     <div>
       <Header />
-      <h1>Criar Setor</h1>
+      <h1>Criar setor</h1>
     </div>
   );
 };

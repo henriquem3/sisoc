@@ -6,7 +6,7 @@ const Criar: React.FC = () => {
   return (
     <div>
       <Header />
-      <h1>Criar ocorrência tipo</h1>
+      <h1>Criar tipo de ocorrência</h1>
     </div>
   );
 };

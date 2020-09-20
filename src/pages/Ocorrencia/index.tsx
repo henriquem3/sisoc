@@ -1,9 +1,12 @@
 import React from 'react';
 
+import Header from '../../components/Header';
+
 const Ocorrencia: React.FC = () => {
   return (
     <div>
-      <h1>Ocorrencias</h1>
+      <Header />
+      <h1>Ocorrências</h1>
     </div>
   );
 };
