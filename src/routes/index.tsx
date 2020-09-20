@@ -17,8 +17,8 @@ import CriarUsuarioTipo from '../pages/UsuarioTipo/Criar';
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact needAuthentication component={Inicio} />
-    <Route path="/usuarios" exact needAuthentication component={Usuario} />
-    <Route path="/usuarios/criar" needAuthentication component={CriarUsuario} />
+    <Route path="/usuario" exact needAuthentication component={Usuario} />
+    <Route path="/usuario/criar" needAuthentication component={CriarUsuario} />
     <Route path="/ocorrencia" exact needAuthentication component={Ocorrencia} />
     <Route path="/ocorrencia/criar" needAuthentication component={CriarOcorrencia} />
     <Route path="/ocorrenciatipo" exact needAuthentication component={OcorrenciaTipo} />
