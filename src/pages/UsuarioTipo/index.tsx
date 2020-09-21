@@ -32,15 +32,14 @@ const UsuarioTipo: React.FC = () => {
   const handleDeleteClick = useCallback(
     async (id: number) => {
       if (window.confirm('Você tem certeza?')) {
-        const tiposAtualizados = tipos.filter((tipo) => tipo.id !== id);
-        setTipos(tiposAtualizados);
-
         try {
           await api.delete(`/usuarios/tipo/${id}`, {
             headers: {
               authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
             },
           });
+          const tiposAtualizados = tipos.filter((tipo) => tipo.id !== id);
+          setTipos(tiposAtualizados);
         } catch (ex) {
           addToast({
             title: 'Erro',
