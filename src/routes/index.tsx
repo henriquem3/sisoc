@@ -22,6 +22,7 @@ import CriarSetor from '../pages/Setor/Criar';
 
 import UsuarioTipo from '../pages/UsuarioTipo';
 import CriarUsuarioTipo from '../pages/UsuarioTipo/Criar';
+import EditarUsuarioTipo from '../pages/UsuarioTipo/Editar';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -66,7 +67,7 @@ const Routes: React.FC = () => (
     <Route
       path="/usuariotipo/editar/:id"
       needAuthentication
-      component={() => <h1>Editar</h1>}
+      component={EditarUsuarioTipo}
     />
 
     <Route path="/login" component={SignIn} />
