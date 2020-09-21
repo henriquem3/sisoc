@@ -29,6 +29,7 @@
     "prettier"
   ],
   "rules": {
+    "no-alert": "off",
     "consistent-return": "off",
     "no-plusplus":"off",
     "no-param-reassign": "off",

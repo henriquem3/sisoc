@@ -38,6 +38,11 @@ export const MenuUsuarioWrapper = styled.div`
         background: #505e7d;
         margin-right: 13px;
       }
+
+      > a {
+        text-decoration: none;
+        color: #32325d;
+      }
     }
   }
   .secondary {
@@ -114,6 +119,11 @@ export const MenuOcorrenciaWrapper = styled.div`
         border-radius: 3.5px;
         background: #505e7d;
         margin-right: 13px;
+      }
+
+      > a {
+        text-decoration: none;
+        color: #32325d;
       }
     }
   }
@@ -192,6 +202,11 @@ export const MenuUsuarioTipoWrapper = styled.div`
         background: #505e7d;
         margin-right: 13px;
       }
+
+      > a {
+        text-decoration: none;
+        color: #32325d;
+      }
     }
   }
   .secondary {
@@ -269,6 +284,11 @@ export const MenuOcorrenciaTipoWrapper = styled.div`
         background: #505e7d;
         margin-right: 13px;
       }
+
+      > a {
+        text-decoration: none;
+        color: #32325d;
+      }
     }
   }
   .secondary {
@@ -345,6 +365,11 @@ export const MenuSetorWrapper = styled.div`
         border-radius: 3.5px;
         background: #505e7d;
         margin-right: 13px;
+      }
+
+      > a {
+        text-decoration: none;
+        color: #32325d;
       }
     }
   }

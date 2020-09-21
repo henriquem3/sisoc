@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { MenuUsuarioTipoWrapper } from './styles';
 
@@ -7,11 +8,11 @@ export const MenuUsuarioTipo: React.FC = () => (
     <ul className="primary">
       <li>
         <span />
-        Listar tipos de usuário
+        <Link to="/usuariotipo">Listar tipos de usuário</Link>
       </li>
       <li>
         <span />
-        Criar tipo de usuário
+        <Link to="/usuariotipo/criar">Criar tipo de usuário</Link>
       </li>
     </ul>
   </MenuUsuarioTipoWrapper>
