@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { FiEdit, FiTrash } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import { useToast } from '../../hooks/toast';
 import api from '../../services/api';
+
+import { Container } from './styles';
 
 interface Tipo {
   id: number;
@@ -53,7 +56,7 @@ const UsuarioTipo: React.FC = () => {
   );
 
   return (
-    <div>
+    <Container>
       <Header />
       <h1>Tipos de Usuário</h1>
       <table>
@@ -71,21 +74,23 @@ const UsuarioTipo: React.FC = () => {
               <td>{tipo.nome}</td>
               <td>{tipo.descricao}</td>
               <td>
-                <Link to={`/usuariotipo/editar/${tipo.id}`}>Editar</Link>
+                <Link to={`/usuariotipo/editar/${tipo.id}`}>
+                  <FiEdit />
+                </Link>
               </td>
               <td>
                 <button
                   onClick={() => handleDeleteClick(tipo.id)}
                   type="button"
                 >
-                  Apagar
+                  <FiTrash />
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+    </Container>
   );
 };
 
