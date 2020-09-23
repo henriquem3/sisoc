@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { Container, Content } from './styles';
 
@@ -18,15 +18,36 @@ import api from '../../../services/api';
 
 interface FormData {
   nome: string;
-  sigla: string;
-  email: string;
+  descricao: string;
 }
 
-const Criar: React.FC = () => {
+interface Setor extends FormData {
+  id: number;
+}
+
+interface Params {
+  id: string | undefined;
+}
+
+const Editar: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [setor, setSetor] = useState<Setor>({} as Setor);
 
   const { addToast } = useToast();
+  const { id } = useParams<Params>();
   const history = useHistory();
+
+  useEffect(() => {
+    const carregarSetor = async (): Promise<void> => {
+      const { data } = await api.get(`/setores/${id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+        },
+      });
+      setSetor(data);
+    };
+    carregarSetor();
+  }, [id]);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
@@ -35,13 +56,13 @@ const Criar: React.FC = () => {
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome obrigatório'),
           sigla: Yup.string().required('Sigla obrigatória'),
-          email: Yup.string().required('E-mail obrigatória'),
+          email: Yup.string().required('Email obrigatório'),
         });
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/setores', data, {
+        await api.put(`/setores/${id}`, data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
@@ -57,12 +78,12 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: 'Não foi possível executar esta ação',
+          description: ex.response.data.error,
           type: 'error',
         });
       }
     },
-    [addToast, history]
+    [addToast, history, id]
   );
 
   return (
@@ -70,24 +91,20 @@ const Criar: React.FC = () => {
       <Header />
       <Container>
         <Content>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Cadastro de Setor</h1>
-            <Input
-              name="nome"
-              icon={FiEdit}
-              placeholder="Nome do setor" 
-            />
+          <Form ref={formRef} onSubmit={handleSubmit} initialData={setor}>
+            <h1>Atualizar Setor</h1>
+            <Input name="nome" icon={FiEdit} placeholder="Nome do setor" />
             <Input
               name="sigla"
               icon={FiEdit}
               placeholder="Sigla do setor"
             />
             <Input
-              name="email"
+              name="setor"
               icon={FiEdit}
-              placeholder="Email do setor"
+              placeholder="Sigla do setor"
             />
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">Atualizar</Button>
           </Form>
         </Content>
       </Container>
@@ -95,4 +112,4 @@ const Criar: React.FC = () => {
   );
 };
 
-export default Criar;
+export default Editar;

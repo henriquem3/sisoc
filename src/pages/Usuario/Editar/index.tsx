@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { Container, Content } from './styles';
 
@@ -18,15 +18,36 @@ import api from '../../../services/api';
 
 interface FormData {
   nome: string;
-  sigla: string;
-  email: string;
+  descricao: string;
 }
 
-const Criar: React.FC = () => {
+interface Usuario extends FormData {
+  id: number;
+}
+
+interface Params {
+  id: string | undefined;
+}
+
+const Editar: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [usuario, setUsuario] = useState<Usuario>({} as Usuario);
 
   const { addToast } = useToast();
+  const { id } = useParams<Params>();
   const history = useHistory();
+
+  useEffect(() => {
+    const carregarUsuario = async (): Promise<void> => {
+      const { data } = await api.get(`/usuarios/${id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+        },
+      });
+      setUsuario(data);
+    };
+    carregarUsuario();
+  }, [id]);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
@@ -34,20 +55,19 @@ const Criar: React.FC = () => {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome obrigatório'),
-          sigla: Yup.string().required('Sigla obrigatória'),
-          email: Yup.string().required('E-mail obrigatória'),
+          descricao: Yup.string().required('Descrição obrigatória'),
         });
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/setores', data, {
+        await api.put(`/usuarios/${id}`, data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
         });
 
-        history.push('/setor');
+        history.push('/usuario');
       } catch (ex) {
         if (ex instanceof Yup.ValidationError) {
           const errors = getValidationErrors(ex);
@@ -57,12 +77,12 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: 'Não foi possível executar esta ação',
+          description: ex.response.data.error,
           type: 'error',
         });
       }
     },
-    [addToast, history]
+    [addToast, history, id]
   );
 
   return (
@@ -70,22 +90,29 @@ const Criar: React.FC = () => {
       <Header />
       <Container>
         <Content>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Cadastro de Setor</h1>
+          <Form ref={formRef} onSubmit={handleSubmit} initialData={usuario}>
+            <h1>Cadastro de usuário</h1>
+            <Input name="nome" icon={FiEdit} placeholder="Nome do usuário" />
             <Input
-              name="nome"
+              name="ra_siape"
               icon={FiEdit}
-              placeholder="Nome do setor" 
-            />
-            <Input
-              name="sigla"
-              icon={FiEdit}
-              placeholder="Sigla do setor"
+              placeholder="RA/SIAPE do usuário"
             />
             <Input
               name="email"
               icon={FiEdit}
-              placeholder="Email do setor"
+              placeholder="Email do usuário"
+            />
+            <Input
+              type="password"
+              name="senha"
+              icon={FiEdit}
+              placeholder="Senha"
+            />
+            <Input
+              name="usuario_tipo"
+              icon={FiEdit}
+              placeholder="Tipo do usuário"
             />
             <Button type="submit">Cadastrar</Button>
           </Form>
@@ -95,4 +122,4 @@ const Criar: React.FC = () => {
   );
 };
 
-export default Criar;
+export default Editar;

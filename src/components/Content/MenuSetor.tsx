@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { MenuSetorWrapper } from './styles';
 
@@ -7,11 +8,11 @@ export const MenuSetor: React.FC = () => (
     <ul className="primary">
       <li>
         <span />
-        Listar setores
+        <Link to="/setor">Listar setores</Link>
       </li>
       <li>
         <span />
-        Criar setor
+        <Link to="/setor/criar">Criar setor</Link>
       </li>
     </ul>
   </MenuSetorWrapper>

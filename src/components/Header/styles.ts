@@ -12,6 +12,8 @@ export const Container = styled.nav`
       background: none;
     }
   }
+
+  width: 100%;
 `;
 
 export const DropdownStyles = styled.div`
@@ -73,3 +75,4 @@ export const DropdownStyles = styled.div`
     width: 100%;
   }
 `;
+

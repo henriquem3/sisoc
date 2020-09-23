@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { MenuOcorrenciaTipoWrapper } from './styles';
 
@@ -7,11 +8,11 @@ export const MenuOcorrenciaTipo: React.FC = () => (
     <ul className="primary">
       <li>
         <span />
-        Listar tipo de ocorrências
+        <Link to="/ocorrenciatipo">Listar tipos de ocorrência</Link>
       </li>
       <li>
         <span />
-        Criar tipo de ocorrência
+        <Link to="/ocorrenciatipo/criar">Criar tipo de ocorrência</Link>
       </li>
     </ul>
   </MenuOcorrenciaTipoWrapper>
