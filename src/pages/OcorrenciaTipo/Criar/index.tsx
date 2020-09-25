@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -22,26 +22,47 @@ interface FormData {
   setor_id: number;
 }
 
+interface Setor {
+  id: number;
+  sigla: string;
+}
+
 const Criar: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [setores, setSetores] = useState<Setor[]>([]);
+  const [setorSelecionado, setSetorSelecionado] = useState({} as Setor);
 
   const { addToast } = useToast();
   const history = useHistory();
+
+  useEffect(() => {
+    const carregarSetores = async (): Promise<void> => {
+      const { data } = await api.get('/setores', {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+        },
+      });
+      setSetores(data);
+    };
+    carregarSetores();
+  }, []);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
         formRef.current?.setErrors({});
+        Object.assign(data, {
+          setor_id: setorSelecionado.id,
+        });
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome obrigatório'),
           descricao: Yup.string().required('Descrição obrigatória'),
-          setor_id: Yup.number().required('Setor obrigatório'),
         });
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/ocorrenciatipos', data, {
+        await api.post('/ocorrencias/tipo', data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
@@ -62,7 +83,15 @@ const Criar: React.FC = () => {
         });
       }
     },
-    [addToast, history]
+    [addToast, history, setorSelecionado]
+  );
+
+  const handleSelectChange = useCallback(
+    (val) => {
+      const selecionado = setores.find((setor) => setor.id === Number(val));
+      if (selecionado) setSetorSelecionado(selecionado);
+    },
+    [setores]
   );
 
   return (
@@ -75,18 +104,27 @@ const Criar: React.FC = () => {
             <Input
               name="nome"
               icon={FiEdit}
-              placeholder="Nome do tipo de ocorrência" 
+              placeholder="Nome do tipo de ocorrência"
             />
             <Input
               name="descricao"
               icon={FiEdit}
               placeholder="Descrição do tipo de ocorrência"
             />
-            <Input
-              name="setor_id"
-              icon={FiEdit}
-              placeholder="ID do Setor"
-            />
+
+            <select
+              value={setorSelecionado.id}
+              onChange={(e) => handleSelectChange(e.target.value)}
+              required
+              name="usuario_tipo_id"
+            >
+              <option value="">Selecione um setor...</option>
+              {setores.map((setor) => (
+                <option value={setor.id} key={setor.id}>
+                  {setor.sigla}
+                </option>
+              ))}
+            </select>
             <Button type="submit">Cadastrar</Button>
           </Form>
         </Content>

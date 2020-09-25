@@ -94,16 +94,8 @@ const Editar: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit} initialData={setor}>
             <h1>Atualizar Setor</h1>
             <Input name="nome" icon={FiEdit} placeholder="Nome do setor" />
-            <Input
-              name="sigla"
-              icon={FiEdit}
-              placeholder="Sigla do setor"
-            />
-            <Input
-              name="setor"
-              icon={FiEdit}
-              placeholder="Sigla do setor"
-            />
+            <Input name="sigla" icon={FiEdit} placeholder="Sigla do setor" />
+            <Input name="email" icon={FiEdit} placeholder="E-mail do setor" />
             <Button type="submit">Atualizar</Button>
           </Form>
         </Content>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { MenuUsuario } from '../Content/MenuUsuario';
 import { MenuOcorrencia } from '../Content/MenuOcorrencia';
@@ -22,9 +21,6 @@ const Header: React.FC = () => {
               </button>
             </li>
             <li>
-              <Link to="/logout">Logout</Link>
-            </li>
-            <li>
               <DropdownOption name="Usuários" content={MenuUsuario} />
             </li>
             <li>
@@ -44,6 +40,14 @@ const Header: React.FC = () => {
             </li>
             <li>
               <DropdownOption name="Setores" content={MenuSetor} />
+            </li>
+            <li>
+              <button
+                onClick={() => window.location.assign('/logout')}
+                type="button"
+              >
+                Logout
+              </button>
             </li>
           </ul>
         </Container>

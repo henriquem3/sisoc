@@ -16,40 +16,63 @@ import { useToast } from '../../../hooks/toast';
 import { getValidationErrors } from '../../../utils/validators';
 import api from '../../../services/api';
 
-interface Tipo {
+interface FormData {
   nome: string;
   descricao: string;
   setor_id: number;
 }
 
+interface Setor {
+  id: number;
+  sigla: string;
+}
+
+interface OcTipo extends FormData {
+  id: number;
+}
 
 interface Params {
   id: string | undefined;
 }
 
 const Editar: React.FC = () => {
-  const formRef = useRef<FormHandles>(null);
-  const [tipo, setTipo] = useState<Tipo>({} as Tipo);
-  const { addToast } = useToast();
   const { id } = useParams<Params>();
+  const formRef = useRef<FormHandles>(null);
+  const [ocTipo, setOcTipo] = useState<OcTipo>();
+  const [setores, setSetores] = useState<Setor[]>([]);
+  const [setorSelecionado, setSetorSelecionado] = useState({} as Setor);
+
+  const { addToast } = useToast();
   const history = useHistory();
 
   useEffect(() => {
-    const carregarTipo = async (): Promise<void> => {
-      const { data } = await api.get(`/usuarios/tipo/${id}`, {
+    const carregarSetores = async (): Promise<void> => {
+      const { data } = await api.get<Setor[]>('/setores', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
         },
       });
-      setTipo(data);
+      setSetores(data);
+
+      const response = await api.get<OcTipo>(`/ocorrencias/tipo/${id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+        },
+      });
+      setOcTipo(response.data);
+      const selected = data.find((item) => item.id === response.data.setor_id);
+      if (selected) setSetorSelecionado(selected);
     };
-    carregarTipo();
+    carregarSetores();
   }, [id]);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
         formRef.current?.setErrors({});
+        Object.assign(data, {
+          setor_id: setorSelecionado.id,
+        });
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome obrigatório'),
           descricao: Yup.string().required('Descrição obrigatória'),
@@ -58,13 +81,13 @@ const Editar: React.FC = () => {
           abortEarly: false,
         });
 
-        await api.put(`/usuarios/tipo/${id}`, data, {
+        await api.put(`/ocorrencias/tipo/${id}`, data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
         });
 
-        history.push('/usuariotipo');
+        history.push('/ocorrenciatipo');
       } catch (ex) {
         if (ex instanceof Yup.ValidationError) {
           const errors = getValidationErrors(ex);
@@ -74,12 +97,20 @@ const Editar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: ex.response.data.error,
+          description: 'Não foi possível executar esta ação',
           type: 'error',
         });
       }
     },
-    [addToast, history, id]
+    [addToast, history, setorSelecionado, id]
+  );
+
+  const handleSelectChange = useCallback(
+    (val) => {
+      const selecionado = setores.find((setor) => setor.id === Number(val));
+      if (selecionado) setSetorSelecionado(selecionado);
+    },
+    [setores]
   );
 
   return (
@@ -87,24 +118,32 @@ const Editar: React.FC = () => {
       <Header />
       <Container>
         <Content>
-        <Form ref={formRef} onSubmit={handleSubmit} initialData={tipo}>
-            <h1>Cadastro de tipo de ocorrência</h1>
+          <Form ref={formRef} onSubmit={handleSubmit} initialData={ocTipo}>
+            <h1>Alterar de tipo de ocorrência</h1>
             <Input
               name="nome"
               icon={FiEdit}
-              placeholder="Nome do tipo de ocorrência" 
+              placeholder="Nome do tipo de ocorrência"
             />
             <Input
               name="descricao"
               icon={FiEdit}
               placeholder="Descrição do tipo de ocorrência"
             />
-            <Input
-              name="setor_id"
-              icon={FiEdit}
-              placeholder="ID do Setor"
-            />
-            <Button type="submit">Cadastrar</Button>
+            <select
+              value={setorSelecionado.id}
+              onChange={(e) => handleSelectChange(e.target.value)}
+              required
+              name="usuario_tipo_id"
+            >
+              <option value="">Selecione um setor...</option>
+              {setores.map((setor) => (
+                <option value={setor.id} key={setor.id}>
+                  {setor.sigla}
+                </option>
+              ))}
+            </select>
+            <Button type="submit">Atualizar</Button>
           </Form>
         </Content>
       </Container>

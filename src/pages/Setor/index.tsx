@@ -59,7 +59,7 @@ const Setor: React.FC = () => {
   return (
     <Container>
       <Header />
-      
+
       <h1>Setores</h1>
       <table>
         <thead>

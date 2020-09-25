@@ -14,7 +14,9 @@ interface Usuario {
   ra_siape: string;
   email: string;
   senha: string;
-  usuario_tipo_id: number;
+  usuario_tipo: {
+    nome: string;
+  };
 }
 
 const Usuario: React.FC = () => {
@@ -44,7 +46,9 @@ const Usuario: React.FC = () => {
               authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
             },
           });
-          const usuariosAtualizados = usuarios.filter((usuario) => usuario.id !== id);
+          const usuariosAtualizados = usuarios.filter(
+            (usuario) => usuario.id !== id
+          );
           setUsuarios(usuariosAtualizados);
         } catch (ex) {
           addToast({
@@ -78,7 +82,7 @@ const Usuario: React.FC = () => {
               <td>{usuario.nome}</td>
               <td>{usuario.ra_siape}</td>
               <td>{usuario.email}</td>
-              <td>{usuario.usuario_tipo_id}</td>
+              <td>{usuario.usuario_tipo.nome}</td>
               <td>
                 <Link to={`/usuario/editar/${usuario.id}`}>
                   <FiEdit />

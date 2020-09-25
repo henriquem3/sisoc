@@ -57,7 +57,7 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: 'Não foi possível executar esta ação',
+          description: ex.response.data.error,
           type: 'error',
         });
       }
@@ -72,21 +72,9 @@ const Criar: React.FC = () => {
         <Content>
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Cadastro de Setor</h1>
-            <Input
-              name="nome"
-              icon={FiEdit}
-              placeholder="Nome do setor" 
-            />
-            <Input
-              name="sigla"
-              icon={FiEdit}
-              placeholder="Sigla do setor"
-            />
-            <Input
-              name="email"
-              icon={FiEdit}
-              placeholder="Email do setor"
-            />
+            <Input name="nome" icon={FiEdit} placeholder="Nome do setor" />
+            <Input name="sigla" icon={FiEdit} placeholder="Sigla do setor" />
+            <Input name="email" icon={FiEdit} placeholder="E-mail do setor" />
             <Button type="submit">Cadastrar</Button>
           </Form>
         </Content>

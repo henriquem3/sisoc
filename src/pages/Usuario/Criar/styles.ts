@@ -25,6 +25,21 @@ export const Container = styled.div`
         color: ${shade(0.2, '#312e38')};
       }
     }
+
+    select {
+      display: none;
+      border-radius: 10px;
+      border: 2px solid #0e141a;
+
+      width: 100%;
+      margin-top: 8px;
+      padding: 16px 8px;
+
+      display: flex;
+
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+    }
   }
 
   > a {

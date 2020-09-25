@@ -8,21 +8,24 @@ import api from '../../services/api';
 
 import { Container } from './styles';
 
-interface Setor {
+interface OcorrenciaTipo {
   id: number;
   nome: string;
-  sigla: string;
-  email: string;
+  descricao: string;
+  setor: {
+    id: number;
+    sigla: string;
+  };
 }
 
-const Setor: React.FC = () => {
-  const [tipos, setTipos] = useState<Setor[]>([]);
+const OcorrenciaTipo: React.FC = () => {
+  const [tipos, setTipos] = useState<OcorrenciaTipo[]>([]);
 
   const { addToast } = useToast();
 
   useEffect(() => {
     const carregarTipos = async (): Promise<void> => {
-      const { data } = await api.get('/ocorrenciatipos', {
+      const { data } = await api.get('/ocorrencias/tipo', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
         },
@@ -37,7 +40,7 @@ const Setor: React.FC = () => {
     async (id: number) => {
       if (window.confirm('Você tem certeza?')) {
         try {
-          await api.delete(`/ocorrenciatipos/${id}`, {
+          await api.delete(`/ocorrencias/tipo/${id}`, {
             headers: {
               authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
             },
@@ -59,14 +62,15 @@ const Setor: React.FC = () => {
   return (
     <Container>
       <Header />
-      
+
       <h1>Tipos de Ocorrência</h1>
       <table>
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Sigla</th>
-            <th>Email</th>
+            <th>Descrição</th>
+            <th>Setor</th>
+            <th>Editar</th>
             <th>Apagar</th>
           </tr>
         </thead>
@@ -74,9 +78,8 @@ const Setor: React.FC = () => {
           {tipos.map((tipo) => (
             <tr key={tipo.id}>
               <td>{tipo.nome}</td>
-              <td>{tipo.sigla}</td>
-              <td>{tipo.email}</td>
-
+              <td>{tipo.descricao}</td>
+              <td>{tipo.setor.sigla}</td>
               <td>
                 <Link to={`/ocorrenciatipo/editar/${tipo.id}`}>
                   <FiEdit />
@@ -98,4 +101,4 @@ const Setor: React.FC = () => {
   );
 };
 
-export default Setor;
+export default OcorrenciaTipo;

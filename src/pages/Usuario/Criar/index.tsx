@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -21,25 +21,47 @@ interface FormData {
   ra_siape: string;
   email: string;
   senha: string;
-  usuario_tipo: number;
+  usuario_tipo_id: number;
+}
+
+interface Tipo {
+  id: number;
+  nome: string;
+  descricao: string;
 }
 
 const Criar: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [tipos, setTipos] = useState<Tipo[]>([]);
+  const [tipoSelecionado, setTipoSelecionado] = useState({} as Tipo);
 
   const { addToast } = useToast();
   const history = useHistory();
+
+  useEffect(() => {
+    const carregarTipos = async (): Promise<void> => {
+      const { data } = await api.get('/usuarios/tipo', {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+        },
+      });
+      setTipos(data);
+    };
+    carregarTipos();
+  }, []);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
         formRef.current?.setErrors({});
+        Object.assign(data, {
+          usuario_tipo_id: tipoSelecionado.id,
+        });
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome obrigatório'),
           ra_siape: Yup.string().required('RA/SIAPE obrigatório'),
           email: Yup.string().required('E-mail obrigatório'),
           senha: Yup.string().required('Senha obrigatória'),
-          usuario_tipo: Yup.number().required('Tipo de usuário obrigatório'),
         });
         await schema.validate(data, {
           abortEarly: false,
@@ -61,12 +83,20 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: 'Não foi possível executar esta ação',
+          description: ex.response.data.error,
           type: 'error',
         });
       }
     },
-    [addToast, history]
+    [addToast, history, tipoSelecionado]
+  );
+
+  const handleSelectChange = useCallback(
+    (val) => {
+      const selecionado = tipos.find((tipo) => tipo.id === Number(val));
+      if (selecionado) setTipoSelecionado(selecionado);
+    },
+    [tipos]
   );
 
   return (
@@ -82,21 +112,21 @@ const Criar: React.FC = () => {
               icon={FiEdit}
               placeholder="RA/SIAPE do usuário"
             />
-            <Input
-              name="email"
-              icon={FiEdit}
-              placeholder="Email do usuário"
-            />
-            <Input
-              name="senha"
-              icon={FiEdit}
-              placeholder="Senha"
-            />
-            <Input
-              name="usuario_tipo"
-              icon={FiEdit}
-              placeholder="Tipo do usuário"
-            />
+            <Input name="email" icon={FiEdit} placeholder="Email do usuário" />
+            <Input name="senha" icon={FiEdit} placeholder="Senha" />
+            <select
+              value={tipoSelecionado.id}
+              onChange={(e) => handleSelectChange(e.target.value)}
+              required
+              name="usuario_tipo_id"
+            >
+              <option value="">Selecione um tipo...</option>
+              {tipos.map((tipo) => (
+                <option value={tipo.id} key={tipo.id}>
+                  {tipo.nome}
+                </option>
+              ))}
+            </select>
             <Button type="submit">Cadastrar</Button>
           </Form>
         </Content>

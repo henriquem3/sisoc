@@ -7,8 +7,13 @@ export const Container = styled.div`
 
   form {
     margin: 80px 0;
-    width: 340px;
+    width: 440px;
     text-align: center;
+
+    span {
+      display: flex;
+      align-self: flex-start;
+    }
 
     h1 {
       margin-bottom: 24px;
@@ -24,6 +29,21 @@ export const Container = styled.div`
       &:hover {
         color: ${shade(0.2, '#312e38')};
       }
+    }
+
+    select {
+      display: none;
+      border-radius: 10px;
+      border: 2px solid #0e141a;
+
+      width: 100%;
+      margin: 8px 0;
+      padding: 16px 8px;
+
+      display: flex;
+
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
     }
   }
 
