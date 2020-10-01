@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useAuth } from '../../hooks/auth';
+
 import { MenuUsuario } from '../Content/MenuUsuario';
 import { MenuOcorrencia } from '../Content/MenuOcorrencia';
 import { MenuOcorrenciaTipo } from '../Content/MenuOcorrenciaTipo';
@@ -10,6 +12,7 @@ import { DropdownOption, DropdownProvider, DropdownRoot } from '../Dropdown';
 import { DropdownStyles, Container } from './styles';
 
 const Header: React.FC = () => {
+  const { user } = useAuth();
   return (
     <DropdownProvider>
       <DropdownStyles>
@@ -21,26 +24,30 @@ const Header: React.FC = () => {
               </button>
             </li>
             <li>
-              <DropdownOption name="Usuários" content={MenuUsuario} />
-            </li>
-            <li>
               <DropdownOption name="Ocorrências" content={MenuOcorrencia} />
             </li>
-            <li>
-              <DropdownOption
-                name="Tipos de Ocorrência"
-                content={MenuOcorrenciaTipo}
-              />
-            </li>
-            <li>
-              <DropdownOption
-                name="Tipos de Usuário"
-                content={MenuUsuarioTipo}
-              />
-            </li>
-            <li>
-              <DropdownOption name="Setores" content={MenuSetor} />
-            </li>
+            {user.usuario_tipo.nome.toLowerCase() === 'admin' && (
+              <>
+                <li>
+                  <DropdownOption name="Usuários" content={MenuUsuario} />
+                </li>
+                <li>
+                  <DropdownOption
+                    name="Tipos de Ocorrência"
+                    content={MenuOcorrenciaTipo}
+                  />
+                </li>
+                <li>
+                  <DropdownOption
+                    name="Tipos de Usuário"
+                    content={MenuUsuarioTipo}
+                  />
+                </li>
+                <li>
+                  <DropdownOption name="Setores" content={MenuSetor} />
+                </li>
+              </>
+            )}
             <li>
               <button
                 onClick={() => window.location.assign('/logout')}

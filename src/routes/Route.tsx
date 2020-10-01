@@ -9,11 +9,13 @@ import { useAuth } from '../hooks/auth';
 
 interface RouteProps extends ReactRouteProps {
   needAuthentication?: boolean;
+  needAdmin?: boolean;
   component: React.ComponentType;
 }
 
 const Route: React.FC<RouteProps> = ({
   needAuthentication = false,
+  needAdmin = false,
   component: Component,
   ...rest
 }) => {
@@ -23,16 +25,37 @@ const Route: React.FC<RouteProps> = ({
     <ReactRoute
       {...rest}
       render={({ location }) => {
-        return needAuthentication === !!user ? (
-          <Component />
-        ) : (
-          <Redirect
-            to={{
-              pathname: needAuthentication ? '/login' : '/',
-              state: { from: location },
-            }}
-          />
-        );
+        if (needAdmin && !user) {
+          return (
+            <Redirect
+              to={{
+                pathname: '/',
+                state: { from: location },
+              }}
+            />
+          );
+        }
+        if (needAdmin && user.usuario_tipo.nome.toLowerCase() !== 'admin') {
+          return (
+            <Redirect
+              to={{
+                pathname: '/',
+                state: { from: location },
+              }}
+            />
+          );
+        }
+        if (needAuthentication && !user) {
+          return (
+            <Redirect
+              to={{
+                pathname: needAuthentication ? '/login' : '/',
+                state: { from: location },
+              }}
+            />
+          );
+        }
+        return <Component />;
       }}
     />
   );

@@ -32,8 +32,19 @@ const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact needAuthentication component={Inicio} />
 
-    <Route path="/usuario" exact needAuthentication component={Usuario} />
-    <Route path="/usuario/criar" needAuthentication component={CriarUsuario} />
+    <Route
+      path="/usuario"
+      exact
+      needAuthentication
+      needAdmin
+      component={Usuario}
+    />
+    <Route
+      path="/usuario/criar"
+      needAuthentication
+      needAdmin
+      component={CriarUsuario}
+    />
     <Route
       path="/usuario/editar/:id"
       needAuthentication
@@ -56,24 +67,33 @@ const Routes: React.FC = () => (
       path="/ocorrenciatipo"
       exact
       needAuthentication
+      needAdmin
       component={OcorrenciaTipo}
     />
     <Route
       path="/ocorrenciatipo/criar"
       needAuthentication
+      needAdmin
       component={CriarOcorrenciaTipo}
     />
     <Route
       path="/ocorrenciatipo/editar/:id"
       needAuthentication
+      needAdmin
       component={EditarOcorrenciaTipo}
     />
 
-    <Route path="/setor" exact needAuthentication component={Setor} />
-    <Route path="/setor/criar" needAuthentication component={CriarSetor} />
+    <Route path="/setor" exact needAdmin needAuthentication component={Setor} />
+    <Route
+      path="/setor/criar"
+      needAdmin
+      needAuthentication
+      component={CriarSetor}
+    />
     <Route
       path="/setor/editar/:id"
       needAuthentication
+      needAdmin
       component={EditarSetor}
     />
 
@@ -81,16 +101,19 @@ const Routes: React.FC = () => (
       path="/usuariotipo"
       exact
       needAuthentication
+      needAdmin
       component={UsuarioTipo}
     />
     <Route
       path="/usuariotipo/criar"
       needAuthentication
+      needAdmin
       component={CriarUsuarioTipo}
     />
     <Route
       path="/usuariotipo/editar/:id"
       needAuthentication
+      needAdmin
       component={EditarUsuarioTipo}
     />
 
