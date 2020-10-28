@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { FiMail, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Container, Content, AnimationContainer } from './styles';
 
@@ -23,9 +23,19 @@ interface FormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const { addToast } = useToast();
+
   const history = useHistory();
+  const location = useLocation();
+
+  const { from } = location.state || { from: { pathname: '/' } };
+
+  useEffect(() => {
+    if (user) {
+      history.push('/');
+    }
+  }, [user, history]);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
@@ -46,7 +56,7 @@ const SignIn: React.FC = () => {
           senha: data.senha,
         });
 
-        history.push('/');
+        history.replace(from);
       } catch (ex) {
         if (ex instanceof Yup.ValidationError) {
           const errors = getValidationErrors(ex);
@@ -61,7 +71,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast, history]
+    [signIn, addToast, history, from]
   );
 
   return (

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FiClock, FiEdit } from 'react-icons/fi';
+import { FiClock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -12,6 +12,7 @@ import Textarea from '../../../components/Textarea';
 import Button from '../../../components/Button';
 import Header from '../../../components/Header';
 
+import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
 
 import { getValidationErrors } from '../../../utils/validators';
@@ -41,10 +42,14 @@ interface Params {
 const Editar: React.FC = () => {
   const { id } = useParams<Params>();
   const formRef = useRef<FormHandles>(null);
+  const { user } = useAuth();
 
   const [ocorrencia, setOcorrencia] = useState({} as Ocorrencia);
+
   const [tipos, setTipos] = useState<Tipo[]>([]);
   const [tipoSelecionado, setTipoSelecionado] = useState({} as Tipo);
+
+  const [situacaoSelecionada, setSituacaoSelecionada] = useState('');
 
   const { addToast } = useToast();
   const history = useHistory();
@@ -68,11 +73,14 @@ const Editar: React.FC = () => {
         datahora: response.data.datahora.replace(':00.000Z', ''),
       });
 
-      const selected = data.find(
+      setSituacaoSelecionada(response.data.situacao);
+
+      const selTipo = data.find(
         (item) => item.id === response.data.ocorrencia_tipo_id
       );
-      if (selected) setTipoSelecionado(selected);
+      if (selTipo) setTipoSelecionado(selTipo);
     };
+
     carregar();
   }, [id]);
 
@@ -82,18 +90,18 @@ const Editar: React.FC = () => {
         formRef.current?.setErrors({});
         Object.assign(data, {
           ocorrencia_tipo_id: tipoSelecionado.id,
+          situacao: situacaoSelecionada,
         });
 
         const schema = Yup.object().shape({
           descricao: Yup.string().required('Descrição obrigatória'),
-          situacao: Yup.string().required('Situação obrigatória'),
           datahora: Yup.date().required('Data/hora obrigatória'),
         });
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/ocorrencias', data, {
+        await api.put(`/ocorrencias/${id}`, data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
@@ -114,10 +122,10 @@ const Editar: React.FC = () => {
         });
       }
     },
-    [addToast, history, tipoSelecionado]
+    [addToast, id, history, tipoSelecionado, situacaoSelecionada]
   );
 
-  const handleSelectChange = useCallback(
+  const handleTipoChange = useCallback(
     (val) => {
       const selecionado = tipos.find((tipo) => tipo.id === Number(val));
       if (selecionado) setTipoSelecionado(selecionado);
@@ -136,11 +144,27 @@ const Editar: React.FC = () => {
             <span>Quando aconteceu?</span>
             <Input name="datahora" type="datetime-local" icon={FiClock} />
 
-            <Input name="situacao" icon={FiEdit} placeholder="Situação" />
+            <select
+              value={situacaoSelecionada}
+              onChange={(e) => setSituacaoSelecionada(e.target.value)}
+              required
+              name="situacao"
+            >
+              <option value="">Selecione uma situação...</option>
+              {user.usuario_tipo.nome.toLowerCase() !== 'admin' ? (
+                <option value="A">ABERTO</option>
+              ) : (
+                <>
+                  <option value="A">ABERTO</option>
+                  <option value="D">DEFERIDO</option>
+                  <option value="I">INDEFERIDO</option>
+                </>
+              )}
+            </select>
 
             <select
               value={tipoSelecionado.id}
-              onChange={(e) => handleSelectChange(e.target.value)}
+              onChange={(e) => handleTipoChange(e.target.value)}
               required
               name="ocorrencia_tipo_id"
             >

@@ -49,7 +49,7 @@ const Route: React.FC<RouteProps> = ({
           return (
             <Redirect
               to={{
-                pathname: needAuthentication ? '/login' : '/',
+                pathname: needAuthentication ? `/login` : '/',
                 state: { from: location },
               }}
             />

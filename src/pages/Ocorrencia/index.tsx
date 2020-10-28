@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import Header from '../../components/Header';
+import Tooltip from '../../components/Tooltip';
 import api from '../../services/api';
 
 import { Container } from './styles';
@@ -20,6 +21,14 @@ interface Ocorrencia {
 const Ocorrencia: React.FC = () => {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
 
+  const formatter = new Intl.DateTimeFormat('pt-BR', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   useEffect(() => {
     const carregarOcorrencias = async (): Promise<void> => {
       const { data } = await api.get('/ocorrencias', {
@@ -31,6 +40,19 @@ const Ocorrencia: React.FC = () => {
     };
 
     carregarOcorrencias();
+  }, []);
+
+  const getTooltipTitle = useCallback((situacao: string): string => {
+    switch (situacao) {
+      case 'A':
+        return 'Aberto';
+      case 'D':
+        return 'Deferido';
+      case 'I':
+        return 'Indeferido';
+      default:
+        return 'Situação';
+    }
   }, []);
 
   return (
@@ -53,8 +75,12 @@ const Ocorrencia: React.FC = () => {
             <tr key={ocorrencia.id}>
               <td>{`${ocorrencia.descricao.substring(0, 11)}`}</td>
               <td>{ocorrencia.ocorrencia_tipo.nome}</td>
-              <td>{ocorrencia.situacao}</td>
-              <td>{ocorrencia.datahora}</td>
+              <td>
+                <Tooltip title={getTooltipTitle(ocorrencia.situacao)}>
+                  {ocorrencia.situacao}
+                </Tooltip>
+              </td>
+              <td>{`${formatter.format(new Date(ocorrencia.datahora))}`}</td>
               <td>
                 <Link to={`/ocorrencia/editar/${ocorrencia.id}`}>
                   <FiEdit />
