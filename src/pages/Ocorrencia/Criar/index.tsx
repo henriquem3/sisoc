@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FiClock } from 'react-icons/fi';
+import { FiClock, FiUser } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -17,8 +17,10 @@ import { useToast } from '../../../hooks/toast';
 
 import { getValidationErrors } from '../../../utils/validators';
 import api from '../../../services/api';
+import Tooltip from '../../../components/Tooltip';
 
 interface FormData {
+  alvo: string;
   descricao: string;
   situacao: string;
   ocorrencia_tipo_id: number;
@@ -65,6 +67,7 @@ const Criar: React.FC = () => {
         });
 
         const schema = Yup.object().shape({
+          alvo: Yup.string().required('Alvo obrigatório'),
           descricao: Yup.string().required('Descrição obrigatória'),
           datahora: Yup.date().required('Data/hora obrigatória'),
         });
@@ -114,6 +117,16 @@ const Criar: React.FC = () => {
 
             <span>Quando aconteceu?</span>
             <Input name="datahora" type="datetime-local" icon={FiClock} />
+
+            <Input
+              name="alvo"
+              placeholder="Alvo"
+              icon={() => (
+                <Tooltip title="Pessoa envolvida/Problema encontrado">
+                  <FiUser />
+                </Tooltip>
+              )}
+            />
 
             <select
               value={situacaoSelecionada}

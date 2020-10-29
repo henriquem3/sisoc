@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FiClock } from 'react-icons/fi';
+import { FiClock, FiUser } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -17,8 +17,10 @@ import { useToast } from '../../../hooks/toast';
 
 import { getValidationErrors } from '../../../utils/validators';
 import api from '../../../services/api';
+import Tooltip from '../../../components/Tooltip';
 
 interface FormData {
+  alvo: string;
   descricao: string;
   situacao: string;
   ocorrencia_tipo_id: number;
@@ -56,33 +58,37 @@ const Editar: React.FC = () => {
 
   useEffect(() => {
     const carregar = async (): Promise<void> => {
-      const { data } = await api.get<Tipo[]>('/ocorrencias/tipo', {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
-        },
-      });
-      setTipos(data);
+      try {
+        const { data } = await api.get<Tipo[]>('/ocorrencias/tipo', {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+          },
+        });
+        setTipos(data);
 
-      const response = await api.get<Ocorrencia>(`/ocorrencias/${id}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
-        },
-      });
-      setOcorrencia({
-        ...response.data,
-        datahora: response.data.datahora.replace(':00.000Z', ''),
-      });
+        const response = await api.get<Ocorrencia>(`/ocorrencias/${id}`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+          },
+        });
+        setOcorrencia({
+          ...response.data,
+          datahora: response.data.datahora.replace(':00.000Z', ''),
+        });
 
-      setSituacaoSelecionada(response.data.situacao);
+        setSituacaoSelecionada(response.data.situacao);
 
-      const selTipo = data.find(
-        (item) => item.id === response.data.ocorrencia_tipo_id
-      );
-      if (selTipo) setTipoSelecionado(selTipo);
+        const selTipo = data.find(
+          (item) => item.id === response.data.ocorrencia_tipo_id
+        );
+        if (selTipo) setTipoSelecionado(selTipo);
+      } catch (e) {
+        if (e.response.status === 401) history.push('/');
+      }
     };
 
     carregar();
-  }, [id]);
+  }, [id, history]);
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
@@ -94,6 +100,7 @@ const Editar: React.FC = () => {
         });
 
         const schema = Yup.object().shape({
+          alvo: Yup.string().required('Alvo obrigatório'),
           descricao: Yup.string().required('Descrição obrigatória'),
           datahora: Yup.date().required('Data/hora obrigatória'),
         });
@@ -143,6 +150,16 @@ const Editar: React.FC = () => {
 
             <span>Quando aconteceu?</span>
             <Input name="datahora" type="datetime-local" icon={FiClock} />
+
+            <Input
+              name="alvo"
+              placeholder="Alvo"
+              icon={() => (
+                <Tooltip title="Pessoa envolvida/Problema encontrado">
+                  <FiUser />
+                </Tooltip>
+              )}
+            />
 
             <select
               value={situacaoSelecionada}

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FiEdit } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Tooltip from '../../components/Tooltip';
@@ -18,7 +18,14 @@ interface Ocorrencia {
   datahora: Date;
 }
 
+interface Params {
+  s: string | undefined;
+}
+
 const Ocorrencia: React.FC = () => {
+  const { s } = useParams<Params>();
+  const history = useHistory();
+
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
 
   const formatter = new Intl.DateTimeFormat('pt-BR', {
@@ -31,16 +38,38 @@ const Ocorrencia: React.FC = () => {
 
   useEffect(() => {
     const carregarOcorrencias = async (): Promise<void> => {
-      const { data } = await api.get('/ocorrencias', {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
-        },
-      });
-      setOcorrencias(data);
+      try {
+        if (s === 'todas') {
+          const { data } = await api.get(`/ocorrencias/todas`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+            },
+          });
+          setOcorrencias(data);
+        } else if (s) {
+          const { data } = await api.get(`/ocorrencias/situacao/${s}`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+            },
+          });
+          setOcorrencias(data);
+        } else {
+          const { data } = await api.get('/ocorrencias', {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
+            },
+          });
+          setOcorrencias(data);
+        }
+      } catch (e) {
+        if (e.response.status === 401) {
+          history.push('/');
+        }
+      }
     };
 
     carregarOcorrencias();
-  }, []);
+  }, [s, history]);
 
   const getTooltipTitle = useCallback((situacao: string): string => {
     switch (situacao) {
