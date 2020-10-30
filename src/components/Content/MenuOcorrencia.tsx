@@ -16,7 +16,7 @@ export const MenuOcorrencia: React.FC = () => {
         </li>
         <li>
           <span />
-          <Link to="/ocorrencia/criar">Criar ocorrências</Link>
+          <Link to="/criar-ocorrencia">Criar ocorrências</Link>
         </li>
         {user.usuario_tipo.nome.toLowerCase() === 'admin' && (
           <li>

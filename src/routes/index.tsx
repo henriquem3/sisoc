@@ -54,17 +54,18 @@ const Routes: React.FC = () => (
     <Route path="/ocorrencia" exact needAuthentication component={Ocorrencia} />
 
     <Route
+      path="/ocorrencia/criar"
+      needAuthentication
+      component={CriarOcorrencia}
+    />
+
+    <Route
       path="/ocorrencia/:s"
       exact
       needAuthentication
       component={Ocorrencia}
     />
 
-    <Route
-      path="/ocorrencia/criar"
-      needAuthentication
-      component={CriarOcorrencia}
-    />
     <Route
       path="/ocorrencia/editar/:id"
       needAuthentication

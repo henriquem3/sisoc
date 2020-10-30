@@ -73,6 +73,7 @@ const Usuario: React.FC = () => {
             <th>RA/SIAPE</th>
             <th>Email</th>
             <th>Tipo de Usuário</th>
+            <th>Editar</th>
             <th>Apagar</th>
           </tr>
         </thead>

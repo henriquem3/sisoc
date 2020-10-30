@@ -57,7 +57,7 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: ex.response.data.error,
+          description: ex.response?.data?.error,
           type: 'error',
         });
       }
