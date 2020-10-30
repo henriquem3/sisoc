@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FiClock, FiUser } from 'react-icons/fi';
 import { Form } from '@unform/web';
@@ -7,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { Container, Content } from './styles';
 
+import InputMasked from '../../../components/InputMasked';
 import Input from '../../../components/Input';
 import Textarea from '../../../components/Textarea';
 import Button from '../../../components/Button';
@@ -71,10 +73,23 @@ const Editar: React.FC = () => {
             authorization: `Bearer ${localStorage.getItem('@Sisoc:token')}`,
           },
         });
-        setOcorrencia({
-          ...response.data,
-          datahora: response.data.datahora.replace(':00.000Z', ''),
-        });
+
+        const dthr = new Date(response.data.datahora);
+        const datahora = `${dthr.getDate().toString().padStart(2, '0')}/${(
+          dthr.getMonth() + 1
+        )
+          .toString()
+          .padStart(
+            2,
+            '0'
+          )}/${dthr.getFullYear()} ${dthr
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${dthr.getMinutes().toString().padStart(2, '0')}`;
+
+        setOcorrencia(response.data);
+
+        formRef.current?.setFieldValue('datahora', datahora);
 
         setSituacaoSelecionada(response.data.situacao);
 
@@ -97,6 +112,7 @@ const Editar: React.FC = () => {
         Object.assign(data, {
           ocorrencia_tipo_id: tipoSelecionado.id,
           situacao: situacaoSelecionada,
+          datahora: new Date(data.datahora).toISOString(),
         });
 
         const schema = Yup.object().shape({
@@ -149,7 +165,11 @@ const Editar: React.FC = () => {
             <h1>Cadastro de ocorrência</h1>
 
             <span>Quando aconteceu?</span>
-            <Input name="datahora" type="datetime-local" icon={FiClock} />
+            <InputMasked
+              mask="99/99/9999 99:99"
+              name="datahora"
+              icon={FiClock}
+            />
 
             <Input
               name="alvo"

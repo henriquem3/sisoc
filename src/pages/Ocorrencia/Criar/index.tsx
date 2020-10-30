@@ -1,12 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  InputHTMLAttributes,
+} from 'react';
+import InputMask from 'react-input-mask';
+import { IconBaseProps } from 'react-icons';
 import { FiClock, FiUser } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import { Container, Content } from './styles';
 
+// import InputMasked from '../../../components/InputMasked';
 import Input from '../../../components/Input';
 import Textarea from '../../../components/Textarea';
 import Button from '../../../components/Button';
@@ -32,6 +42,16 @@ interface Tipo {
   nome: string;
   descricao: string;
 }
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  icon?: React.ComponentType<IconBaseProps>;
+}
+
+const InputMasked = ({ value, ...rest }: InputProps): React.ReactElement => (
+  <InputMask mask="99/99/9999 99:99" value={value} {...rest}>
+    {(inputProps: any) => <Input {...inputProps} />}
+  </InputMask>
+);
 
 const Criar: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -64,6 +84,7 @@ const Criar: React.FC = () => {
         Object.assign(data, {
           ocorrencia_tipo_id: tipoSelecionado.id,
           situacao: situacaoSelecionada,
+          datahora: new Date(data.datahora).toISOString(),
         });
 
         const schema = Yup.object().shape({
@@ -91,7 +112,7 @@ const Criar: React.FC = () => {
 
         addToast({
           title: 'Erro',
-          description: ex.response.data.error,
+          description: ex.response?.data?.error,
           type: 'error',
         });
       }
@@ -115,8 +136,11 @@ const Criar: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Cadastro de ocorrência</h1>
 
-            <span>Quando aconteceu?</span>
-            <Input name="datahora" type="datetime-local" icon={FiClock} />
+            <InputMasked
+              name="datahora"
+              placeholder="Quando aconteceu?"
+              icon={FiClock}
+            />
 
             <Input
               name="alvo"
