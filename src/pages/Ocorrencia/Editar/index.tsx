@@ -58,6 +58,20 @@ const Editar: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
+  const formatDate = (data: Date): string => {
+    return `${data.getDate().toString().padStart(2, '0')}/${(
+      data.getMonth() + 1
+    )
+      .toString()
+      .padStart(
+        2,
+        '0'
+      )}/${data.getFullYear()} ${data
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${data.getMinutes().toString().padStart(2, '0')}`;
+  };
+
   useEffect(() => {
     const carregar = async (): Promise<void> => {
       try {
@@ -75,17 +89,7 @@ const Editar: React.FC = () => {
         });
 
         const dthr = new Date(response.data.datahora);
-        const datahora = `${dthr.getDate().toString().padStart(2, '0')}/${(
-          dthr.getMonth() + 1
-        )
-          .toString()
-          .padStart(
-            2,
-            '0'
-          )}/${dthr.getFullYear()} ${dthr
-          .getHours()
-          .toString()
-          .padStart(2, '0')}:${dthr.getMinutes().toString().padStart(2, '0')}`;
+        const datahora = formatDate(dthr);
 
         setOcorrencia(response.data);
 
@@ -107,12 +111,14 @@ const Editar: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
+      const splittedDate = data.datahora.split('/');
+      const datahr = `${splittedDate[1]}/${splittedDate[0]}/${splittedDate[2]}`;
       try {
         formRef.current?.setErrors({});
         Object.assign(data, {
           ocorrencia_tipo_id: tipoSelecionado.id,
           situacao: situacaoSelecionada,
-          datahora: new Date(data.datahora).toISOString(),
+          datahora: new Date(datahr).toISOString(),
         });
 
         const schema = Yup.object().shape({
