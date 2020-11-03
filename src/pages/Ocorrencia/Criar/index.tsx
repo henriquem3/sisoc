@@ -34,7 +34,7 @@ interface FormData {
   descricao: string;
   situacao: string;
   ocorrencia_tipo_id: number;
-  datahora: Date;
+  datahora: string;
 }
 
 interface Tipo {
@@ -80,11 +80,13 @@ const Criar: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
+        const splittedDate = data.datahora.split('/');
+        const datahr = `${splittedDate[1]}/${splittedDate[0]}/${splittedDate[2]}`;
         formRef.current?.setErrors({});
         Object.assign(data, {
           ocorrencia_tipo_id: tipoSelecionado.id,
           situacao: situacaoSelecionada,
-          datahora: new Date(data.datahora).toISOString(),
+          datahora: new Date(datahr).toISOString(),
         });
 
         const schema = Yup.object().shape({

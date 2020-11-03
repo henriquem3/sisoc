@@ -170,10 +170,10 @@ const Editar: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit} initialData={ocorrencia}>
             <h1>Cadastro de ocorrência</h1>
 
-            <span>Quando aconteceu?</span>
             <InputMasked
               mask="99/99/9999 99:99"
               name="datahora"
+              placeholder="Quando aconteceu?"
               icon={FiClock}
             />
 
