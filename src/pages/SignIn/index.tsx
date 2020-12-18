@@ -5,7 +5,8 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Container, Content, AnimationContainer } from './styles';
+import { Container, Content, AnimationContainer, Background } from './styles';
+import bgImage from '../../assets/ifms-logo.png';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -98,6 +99,7 @@ const SignIn: React.FC = () => {
           </Link> */}
         </AnimationContainer>
       </Content>
+      <Background src={bgImage} />
     </Container>
   );
 };

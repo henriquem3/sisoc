@@ -35,13 +35,13 @@ export const MenuUsuarioWrapper = styled.div`
         width: 17px;
         height: 17px;
         border-radius: 3.5px;
-        background: #505e7d;
+        background: #145730;
         margin-right: 13px;
       }
 
       > a {
         text-decoration: none;
-        color: #32325d;
+        color: #145730;
       }
     }
   }
@@ -117,13 +117,13 @@ export const MenuOcorrenciaWrapper = styled.div`
         width: 17px;
         height: 17px;
         border-radius: 3.5px;
-        background: #505e7d;
+        background: #145730;
         margin-right: 13px;
       }
 
       > a {
         text-decoration: none;
-        color: #32325d;
+        color: #145730;
       }
     }
   }
@@ -199,13 +199,13 @@ export const MenuUsuarioTipoWrapper = styled.div`
         width: 17px;
         height: 17px;
         border-radius: 3.5px;
-        background: #505e7d;
+        background: #145730;
         margin-right: 13px;
       }
 
       > a {
         text-decoration: none;
-        color: #32325d;
+        color: #145730;
       }
     }
   }
@@ -281,13 +281,13 @@ export const MenuOcorrenciaTipoWrapper = styled.div`
         width: 17px;
         height: 17px;
         border-radius: 3.5px;
-        background: #505e7d;
+        background: #145730;
         margin-right: 13px;
       }
 
       > a {
         text-decoration: none;
-        color: #32325d;
+        color: #145730;
       }
     }
   }
@@ -363,13 +363,13 @@ export const MenuSetorWrapper = styled.div`
         width: 17px;
         height: 17px;
         border-radius: 3.5px;
-        background: #505e7d;
+        background: #145730;
         margin-right: 13px;
       }
 
       > a {
         text-decoration: none;
-        color: #32325d;
+        color: #145730;
       }
     }
   }

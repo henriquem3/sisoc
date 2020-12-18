@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const Container = styled.nav`
+  background-color: #145730;
+
   > ul {
     display: flex;
     align-items: center;
@@ -10,6 +12,7 @@ export const Container = styled.nav`
     button {
       border: 0;
       background: none;
+      color: #f6f9fc;
     }
   }
 
@@ -20,7 +23,7 @@ export const DropdownStyles = styled.div`
   .dropdown-option {
     padding: 10px 15px;
     outline: 0;
-    color: #000;
+    color: #f6f9fc;
     font-size: 16px;
 
     transition: opacity 0.2s;
@@ -39,8 +42,8 @@ export const DropdownStyles = styled.div`
   .dropdown-arrow {
     position: relative;
     &::before {
-      border-top: 1px solid #505e7d;
-      border-left: 1px solid #505e7d;
+      border-top: 1px solid #145730; /* 505e7d */
+      border-left: 1px solid #145730;
       content: '';
       position: absolute;
       width: 16px;
@@ -61,7 +64,7 @@ export const DropdownStyles = styled.div`
       0 -18px 60px -10px rgba(0, 0, 0, 0.025);
 
     background: #f6f5ff;
-    border: 1px solid #505e7d;
+    border: 1px solid #145730;
     border-radius: 4px;
   }
 
@@ -75,4 +78,3 @@ export const DropdownStyles = styled.div`
     width: 100%;
   }
 `;
-

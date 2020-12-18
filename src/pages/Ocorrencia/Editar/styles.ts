@@ -74,3 +74,7 @@ export const Content = styled.div`
 
   width: 100%;
 `;
+
+export const Wrap = styled.div`
+  margin-top: 16px;
+`;

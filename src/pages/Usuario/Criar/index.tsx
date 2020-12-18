@@ -5,7 +5,7 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 
-import { Container, Content } from './styles';
+import { Container, Content, Wrap } from './styles';
 
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
@@ -106,27 +106,55 @@ const Criar: React.FC = () => {
         <Content>
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Cadastro de usuário</h1>
-            <Input name="nome" icon={FiEdit} placeholder="Nome do usuário" />
-            <Input
-              name="ra_siape"
-              icon={FiEdit}
-              placeholder="RA/SIAPE do usuário"
-            />
-            <Input name="email" icon={FiEdit} placeholder="Email do usuário" />
-            <Input name="senha" icon={FiEdit} placeholder="Senha" />
-            <select
-              value={tipoSelecionado.id}
-              onChange={(e) => handleSelectChange(e.target.value)}
-              required
-              name="usuario_tipo_id"
-            >
-              <option value="">Selecione um tipo...</option>
-              {tipos.map((tipo) => (
-                <option value={tipo.id} key={tipo.id}>
-                  {tipo.nome}
-                </option>
-              ))}
-            </select>
+
+            <Wrap>
+              <span>Nome do usuário</span>
+              <Input name="nome" icon={FiEdit} placeholder="Nome do usuário" />
+            </Wrap>
+
+            <Wrap>
+              <span>RA/Siape</span>
+              <Input
+                name="ra_siape"
+                icon={FiEdit}
+                placeholder="RA/Siape do usuário"
+              />
+            </Wrap>
+
+            <Wrap>
+              <span>E-mail do usuário</span>
+              <Input
+                name="email"
+                icon={FiEdit}
+                placeholder="E-mail do usuário"
+              />
+            </Wrap>
+
+            <Wrap>
+              <span>Senha do usuário</span>
+              <Input
+                name="senha"
+                icon={FiEdit}
+                placeholder="Senha do usuário"
+              />
+            </Wrap>
+
+            <Wrap>
+              <span>Tipo do usuário</span>
+              <select
+                value={tipoSelecionado.id}
+                onChange={(e) => handleSelectChange(e.target.value)}
+                required
+                name="usuario_tipo_id"
+              >
+                <option value="">Selecione um tipo...</option>
+                {tipos.map((tipo) => (
+                  <option value={tipo.id} key={tipo.id}>
+                    {tipo.nome}
+                  </option>
+                ))}
+              </select>
+            </Wrap>
             <Button type="submit">Cadastrar</Button>
           </Form>
         </Content>

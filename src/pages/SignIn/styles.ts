@@ -5,6 +5,7 @@ export const Container = styled.div`
   height: 100vh;
   display: flex;
   align-items: stretch;
+  justify-content: space-between;
 `;
 
 export const Content = styled.div`
@@ -14,6 +15,14 @@ export const Content = styled.div`
   place-content: center;
 
   width: 100%;
+  max-width: 700px;
+`;
+
+export const Background = styled.img`
+  width: auto;
+  height: 100%;
+
+  transform: scale(0.7);
 `;
 
 const appearFromTop = keyframes`

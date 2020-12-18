@@ -5,7 +5,7 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { Container, Content } from './styles';
+import { Container, Content, Wrap } from './styles';
 
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
@@ -93,9 +93,21 @@ const Editar: React.FC = () => {
         <Content>
           <Form ref={formRef} onSubmit={handleSubmit} initialData={setor}>
             <h1>Atualizar Setor</h1>
-            <Input name="nome" icon={FiEdit} placeholder="Nome do setor" />
-            <Input name="sigla" icon={FiEdit} placeholder="Sigla do setor" />
-            <Input name="email" icon={FiEdit} placeholder="E-mail do setor" />
+
+            <Wrap>
+              <span>Nome do setor</span>
+              <Input name="nome" icon={FiEdit} placeholder="Nome do setor" />
+            </Wrap>
+
+            <Wrap>
+              <span>Sigla do setor</span>
+              <Input name="sigla" icon={FiEdit} placeholder="Sigla do setor" />
+            </Wrap>
+
+            <Wrap>
+              <span>E-mail do setor</span>
+              <Input name="email" icon={FiEdit} placeholder="E-mail do setor" />
+            </Wrap>
             <Button type="submit">Atualizar</Button>
           </Form>
         </Content>

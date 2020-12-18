@@ -14,7 +14,7 @@ import { FormHandles } from '@unform/core';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import { Container, Content } from './styles';
+import { Container, Content, Wrap } from './styles';
 
 // import InputMasked from '../../../components/InputMasked';
 import Input from '../../../components/Input';
@@ -138,54 +138,70 @@ const Criar: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Cadastro de ocorrência</h1>
 
-            <InputMasked
-              name="datahora"
-              placeholder="Quando aconteceu?"
-              icon={FiClock}
-            />
+            <Wrap>
+              <span>Quando aconteceu?</span>
+              <InputMasked
+                name="datahora"
+                placeholder="Quando aconteceu?"
+                icon={FiClock}
+              />
+            </Wrap>
 
-            <Input
-              name="alvo"
-              placeholder="Alvo"
-              icon={() => (
-                <Tooltip title="Pessoa envolvida/Problema encontrado">
-                  <FiUser />
-                </Tooltip>
-              )}
-            />
+            <Wrap>
+              <span>Alvo</span>
+              <Input
+                name="alvo"
+                placeholder="Alvo"
+                icon={() => (
+                  <Tooltip title="Pessoa envolvida/Problema encontrado">
+                    <FiUser />
+                  </Tooltip>
+                )}
+              />
+            </Wrap>
 
-            <select
-              value={situacaoSelecionada}
-              onChange={(e) => setSituacaoSelecionada(e.target.value)}
-              required
-              name="situacao"
-            >
-              <option value="">Selecione uma situação...</option>
-              {user.usuario_tipo.nome.toLowerCase() !== 'admin' ? (
-                <option value="A">ABERTO</option>
-              ) : (
-                <>
+            <Wrap>
+              <span>Situação</span>
+              <select
+                value={situacaoSelecionada}
+                onChange={(e) => setSituacaoSelecionada(e.target.value)}
+                required
+                name="situacao"
+              >
+                <option value="">Selecione uma situação...</option>
+                {user.usuario_tipo.nome.toLowerCase() !== 'admin' ? (
                   <option value="A">ABERTO</option>
-                  <option value="D">DEFERIDO</option>
-                  <option value="I">INDEFERIDO</option>
-                </>
-              )}
-            </select>
+                ) : (
+                  <>
+                    <option value="A">ABERTO</option>
+                    <option value="D">DEFERIDO</option>
+                    <option value="I">INDEFERIDO</option>
+                  </>
+                )}
+              </select>
+            </Wrap>
 
-            <select
-              value={tipoSelecionado.id}
-              onChange={(e) => handleTipoChange(e.target.value)}
-              required
-              name="ocorrencia_tipo_id"
-            >
-              <option value="">Selecione um tipo...</option>
-              {tipos.map((tipo) => (
-                <option value={tipo.id} key={tipo.id}>
-                  {tipo.nome}
-                </option>
-              ))}
-            </select>
-            <Textarea name="descricao" placeholder="Descrição" />
+            <Wrap>
+              <span>Selecione um tipo</span>
+              <select
+                value={tipoSelecionado.id}
+                onChange={(e) => handleTipoChange(e.target.value)}
+                required
+                name="ocorrencia_tipo_id"
+              >
+                <option value="">Selecione um tipo...</option>
+                {tipos.map((tipo) => (
+                  <option value={tipo.id} key={tipo.id}>
+                    {tipo.nome}
+                  </option>
+                ))}
+              </select>
+            </Wrap>
+
+            <Wrap>
+              <span>Descrição</span>
+              <Textarea name="descricao" placeholder="Descrição" />
+            </Wrap>
             <Button type="submit">Cadastrar</Button>
           </Form>
         </Content>

@@ -5,7 +5,7 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { Container, Content } from './styles';
+import { Container, Content, Wrap } from './styles';
 
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
@@ -120,29 +120,42 @@ const Editar: React.FC = () => {
         <Content>
           <Form ref={formRef} onSubmit={handleSubmit} initialData={ocTipo}>
             <h1>Alterar de tipo de ocorrência</h1>
-            <Input
-              name="nome"
-              icon={FiEdit}
-              placeholder="Nome do tipo de ocorrência"
-            />
-            <Input
-              name="descricao"
-              icon={FiEdit}
-              placeholder="Descrição do tipo de ocorrência"
-            />
-            <select
-              value={setorSelecionado.id}
-              onChange={(e) => handleSelectChange(e.target.value)}
-              required
-              name="usuario_tipo_id"
-            >
-              <option value="">Selecione um setor...</option>
-              {setores.map((setor) => (
-                <option value={setor.id} key={setor.id}>
-                  {setor.sigla}
-                </option>
-              ))}
-            </select>
+
+            <Wrap>
+              <span>Nome do tipo de ocorrência</span>
+              <Input
+                name="nome"
+                icon={FiEdit}
+                placeholder="Nome do tipo de ocorrência"
+              />
+            </Wrap>
+
+            <Wrap>
+              <span>Descrição do tipo de ocorrência</span>
+              <Input
+                name="descricao"
+                icon={FiEdit}
+                placeholder="Descrição do tipo de ocorrência"
+              />
+            </Wrap>
+
+            <Wrap>
+              <span>Selecione o setor</span>
+              <select
+                value={setorSelecionado.id}
+                onChange={(e) => handleSelectChange(e.target.value)}
+                required
+                name="usuario_tipo_id"
+              >
+                <option value="">Selecione um setor...</option>
+                {setores.map((setor) => (
+                  <option value={setor.id} key={setor.id}>
+                    {setor.sigla}
+                  </option>
+                ))}
+              </select>
+            </Wrap>
+
             <Button type="submit">Atualizar</Button>
           </Form>
         </Content>
